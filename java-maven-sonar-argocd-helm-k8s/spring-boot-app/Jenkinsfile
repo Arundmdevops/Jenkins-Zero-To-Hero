@@ -64,8 +64,10 @@ pipeline {
             }
         }
     }
-     stage('deploy on eks'){
-            steps{
+  }
+    post {
+        always {
+            node('any') {
                 withAWS(credentials: 'aws-login', region: 'ap-northeast-1') {
                     sh "aws eks update-kubeconfig --region ap-northeast-1 --name my-eks-cluster"
                     sh "kubectl apply -f java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml"
@@ -74,5 +76,5 @@ pipeline {
                 }
             }
         }
-  }
+    }
 }
